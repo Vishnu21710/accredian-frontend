@@ -4,7 +4,6 @@ import { API_URL } from "../constants";
 
 export const useCourses = () => {
   const [isLoading, setIsLoading] = useState(false);
-  console.log(API_URL, 'API URL');
 
   const [courses, setCourses] = useState([]);
   const [error, setError] = useState();

@@ -1,26 +1,25 @@
 import React, { useContext, useState } from "react";
 import { ReferalModalContext } from "../../contexts/referal-modal-context";
-import { XIcon } from "lucide-react";
+import { LoaderCircle, XIcon } from "lucide-react";
 import Button from "../button/button";
 import FormInput from "../form-input/form-input";
 import { useCourses } from "../../hooks/useCourses";
 import axios from "axios";
 import { toast } from "sonner";
-import { useReferalModal } from "../../hooks/useReferalModal";
 import { API_URL } from "../../constants";
+
 const ReferalModal = () => {
   const [formState, setFormState] = useState({
     referee_email: "",
     referrer_email: "",
     referrer_name: "",
     referee_name: "",
-    course_id: 1
+    course_id: 1,
   });
-  const [fieldErrors, setFieldErrors] = useState()
-
+  const [fieldErrors, setFieldErrors] = useState();
+  const [formLoading, setFormLoading] = useState(false);
   const { isLoading, courses, error } = useCourses();
 
-  console.log(formState);
 
   const { isOpen, onClose } = useContext(ReferalModalContext);
 
@@ -29,26 +28,26 @@ const ReferalModal = () => {
     setFormState((p) => ({ ...p, [name]: value }));
   };
 
-  const onSubmit = async(e) => {
-    e.preventDefault()
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    setFormLoading(true);
     try {
       const data = await axios.post(`${API_URL}/referrals`, {
         ...formState,
-        course_id: parseInt(formState.course_id)
-      })
-      if(data?.data?.field_errors){
-        setFieldErrors(data.data.field_errors)
-        return
+        course_id: parseInt(formState.course_id),
+      });
+      if (data?.data?.field_errors) {
+        setFieldErrors(data.data.field_errors);
+        return;
       }
-      if(data && !data.data.fieldErrors){
-        onClose()
-        toast.success(`Referred Successfully!`)
+      if (data && !data.data.fieldErrors) {
+        onClose();
+        toast.success(`Referred Successfully!`);
       }
-
     } catch (error) {
-      console.log(error);
-      toast.error(String(error))
-      console.log(error);
+      toast.error(String(error));
+    } finally {
+      setFormLoading(false);
     }
   };
 
@@ -56,13 +55,13 @@ const ReferalModal = () => {
     return;
   }
 
-  const onBlur = ()=>{
-    setFieldErrors(null)
-  }
+  const onBlur = () => {
+    setFieldErrors(null);
+  };
 
   return (
     <div
-      onClick={()=>onClose(()=>setFieldErrors(null))}
+      onClick={() => onClose(() => setFieldErrors(null))}
       className="w-full fixed flex items-center p-5 justify-center bg-black bg-opacity-50 z-[20] min-h-full  backdrop-filter backdrop-blur-md"
     >
       <div
@@ -71,7 +70,7 @@ const ReferalModal = () => {
       >
         <div className="w-full flex ">
           <Button
-            onClick={()=>onClose(()=>setFieldErrors(null))}
+            onClick={() => onClose(() => setFieldErrors(null))}
             variant="ghost"
             size="icon"
             className="m-2 ml-auto rounded-full"
@@ -110,7 +109,6 @@ const ReferalModal = () => {
                 label={"Your Name"}
                 placeholder={"Enter your name"}
                 errors={fieldErrors}
-
               />
 
               <FormInput
@@ -127,25 +125,37 @@ const ReferalModal = () => {
                 label={"Referee Name"}
                 placeholder={"Enter referee name"}
                 errors={fieldErrors}
-
               />
 
               <label htmlFor="" className="md:col-span-2  gap-x-3">
-                <p className="text-sm text-neutral-700">Course <span className="text-red-500 ml-1 mt-2">*</span></p>
+                <p className="text-sm text-neutral-700">
+                  Course <span className="text-red-500 ml-1 mt-2">*</span>
+                </p>
                 {
-                  <select required onChange={onChange} name={"course_id"} value={formState.course_id} className="rounded-md text-sm p-2 border mt-2 w-full ">
+                  <select
+                    required
+                    onChange={onChange}
+                    name={"course_id"}
+                    value={formState.course_id}
+                    className="rounded-md text-sm p-2 border mt-2 w-full "
+                  >
                     {!isLoading &&
-                      courses.map((course) => (
-                        <option className="capitalize" value={course?.id}>
+                      courses?.map((course) => (
+                        <option key={course?.id} className="capitalize" value={course?.id}>
                           {course?.title}
                         </option>
                       ))}
-                   
                   </select>
                 }
-                
               </label>
-              <Button disabled={isLoading} onClick={onSubmit} className={"md:col-span-2"}>Refer</Button>
+              <Button
+                disabled={isLoading}
+                onClick={onSubmit}
+                className={"md:col-span-2 flex items-center justify-center"}
+
+              >
+                {formLoading ? <LoaderCircle className="animate-spin w-7 h-7"/> : "Refer" }
+              </Button>
             </div>
           </form>
         </div>
