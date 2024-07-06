@@ -38,6 +38,13 @@ const ReferalModal = () => {
       });
       if (data?.data?.field_errors) {
         setFieldErrors(data.data.field_errors);
+        setFormState({
+          course_id: 1,
+          referee_email: "",
+          referrer_email: "",
+          referee_name: "",
+          referrer_name: ""
+        })
         return;
       }
       if (data && !data.data.fieldErrors) {
@@ -48,6 +55,13 @@ const ReferalModal = () => {
       toast.error(String(error));
     } finally {
       setFormLoading(false);
+      setFormState({
+        course_id: 1,
+        referee_email: "",
+        referrer_email: "",
+        referee_name: "",
+        referrer_name: ""
+      })
     }
   };
 
