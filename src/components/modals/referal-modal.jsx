@@ -149,7 +149,7 @@ const ReferalModal = () => {
                 }
               </label>
               <Button
-                disabled={isLoading}
+                disabled={formLoading}
                 onClick={onSubmit}
                 className={"md:col-span-2 flex items-center justify-center"}
 
