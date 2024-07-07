@@ -20,6 +20,9 @@ const ReferalModal = () => {
   const [formLoading, setFormLoading] = useState(false);
   const { isLoading, courses, error } = useCourses();
 
+  console.log(isLoading, 'Course Loading');
+  console.log(error, "course error");
+  console.log(courses, 'Courses')
 
   const { isOpen, onClose } = useContext(ReferalModalContext);
 
