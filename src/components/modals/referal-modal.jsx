@@ -20,9 +20,6 @@ const ReferalModal = () => {
   const [formLoading, setFormLoading] = useState(false);
   const { isLoading, courses, error } = useCourses();
 
-  console.log(isLoading, 'Course Loading');
-  console.log(error, "course error");
-  console.log(courses, 'Courses')
 
   const { isOpen, onClose } = useContext(ReferalModalContext);
 
@@ -144,9 +141,9 @@ const ReferalModal = () => {
                 errors={fieldErrors}
               />
 
-              <label htmlFor="" className="md:col-span-2  gap-x-3">
+              <label htmlFor="" className="md:col-span-2  gap-x-3 ">
                 <p className="text-sm text-neutral-700">
-                  Course <span className="text-red-500 ml-1 mt-2">*</span>
+                  Course <span className="text-red-500 ml-1 mt-2">*</span> {isLoading && <span><LoaderCircle className="animate-spin w-7 h-7"/>(Please Wait for upto 50s ...doing a cold start until then you will see default courses)</span>}
                 </p>
                 {
                   <select
@@ -156,7 +153,7 @@ const ReferalModal = () => {
                     value={formState.course_id}
                     className="rounded-md text-sm p-2 border mt-2 w-full "
                   >
-                    {!isLoading &&
+                    {
                       courses?.map((course) => (
                         <option key={course?.id} className="capitalize" value={course?.id}>
                           {course?.title}

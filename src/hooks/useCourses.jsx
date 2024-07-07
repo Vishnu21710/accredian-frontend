@@ -3,10 +3,31 @@ import axios from "axios";
 import { API_URL } from "../constants";
 
 export const useCourses = () => {
-  console.log('Inside use Courses');
+  console.log("Inside use Courses");
   const [isLoading, setIsLoading] = useState(false);
 
-  const [courses, setCourses] = useState([]);
+  const [courses, setCourses] = useState([
+    {
+      title: "Full Stack Development",
+      id: 1,
+    },
+    {
+      title: "Digital Marketing",
+      id: 2,
+    },
+    {
+      title: "Data Science ",
+      id: 3,
+    },
+    {
+      title: "Project Management",
+      id: 4,
+    },
+    {
+      title: "MERN Stack",
+      id: 5,
+    },
+  ]);
   const [error, setError] = useState();
 
   const getCourses = async () => {
@@ -15,7 +36,6 @@ export const useCourses = () => {
       const data = (await axios.get(`${API_URL}/courses`)).data;
       setCourses(data);
     } catch (error) {
-      console.log(error, 'course use error');
       setError(error);
     } finally {
       setIsLoading(false);
@@ -29,6 +49,6 @@ export const useCourses = () => {
   return {
     courses,
     isLoading,
-    error
-  }
+    error,
+  };
 };
